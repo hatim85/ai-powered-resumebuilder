@@ -349,7 +349,7 @@ async function uploadFileToAkave(bucketName, filePath) {
   form.append("file", fs.createReadStream(filePath));
 
   try {
-    const response = await axios.post(`http://localhost:8000/buckets/${bucketName}/files`, form, {
+    const response = await axios.post(`https://akavelink-api.onrender.com/buckets/${bucketName}/files`, form, {
       headers: form.getHeaders(),
     });
     console.log("Response from upload to Akave:", response.data);

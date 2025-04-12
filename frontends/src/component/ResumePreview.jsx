@@ -28,7 +28,7 @@ const ResumePreview = ({ walletAddress, contract, resume, fileName }) => {
       }
 
       const response = await axios.get(
-        `http://localhost:8000/buckets/Resumes/files/${fileName}/download`,
+        `https://akavelink-api.onrender.com/buckets/Resumes/files/${fileName}/download`,
         { responseType: "blob" }
       );
 

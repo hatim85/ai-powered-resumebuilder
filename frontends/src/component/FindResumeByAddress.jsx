@@ -38,7 +38,7 @@ const FindResumeByAddress = ({ walletAddress, contract }) => {
       }
 
       const response = await axios.get(
-        `http://localhost:8000/buckets/Resumes/files/${cid}/download`,
+        `https://akavelink-api.onrender.com/buckets/Resumes/files/${cid}/download`,
         { responseType: "blob" }
       );
 
@@ -70,7 +70,7 @@ const FindResumeByAddress = ({ walletAddress, contract }) => {
     setDownloadLoading(true); // Start loading
     try {
       const response = await axios.get(
-        `http://localhost:8000/buckets/Resumes/files/${resumeData.cid}/download`,
+        `https://akavelink-api.onrender.com/buckets/Resumes/files/${resumeData.cid}/download`,
         { responseType: "blob" }
       );
 
