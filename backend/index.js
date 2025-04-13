@@ -1,5 +1,3 @@
-
-
 // backend/index.js
 import express from "express";
 import cors from "cors";
@@ -345,6 +343,7 @@ function generateResumeHTML(resumeData) {
 // }
 
 async function generatePDF(htmlContent, filePath) {
+<<<<<<< HEAD
   const browser = await puppeteer.launch({
     headless: true,
     executablePath: process.env.CHROME_EXECUTABLE_PATH || undefined,
@@ -359,6 +358,31 @@ async function generatePDF(htmlContent, filePath) {
     margin: { top: "20mm", right: "20mm", bottom: "20mm", left: "20mm" },
   });
   await browser.close();
+=======
+  try {
+    const launchOptions = {
+      headless: true,
+      args: ["--no-sandbox", "--disable-setuid-sandbox"], // Required for Render's environment
+      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined, // Use env variable if set
+    };
+
+    console.log("Launching Puppeteer with options:", launchOptions);
+
+    const browser = await puppeteer.launch(launchOptions);
+    const page = await browser.newPage();
+    await page.setContent(htmlContent, { waitUntil: "networkidle0" }); // Ensure content is fully loaded
+    await page.pdf({
+      path: filePath,
+      format: "A4",
+      margin: { top: "20mm", right: "20mm", bottom: "20mm", left: "20mm" },
+    });
+    await browser.close();
+    console.log(`PDF generated successfully at ${filePath}`);
+  } catch (error) {
+    console.error("Failed to generate PDF:", error);
+    throw new Error(`PDF generation failed: ${error.message}`);
+  }
+>>>>>>> 5d71a8b3e1ef19a07bec483cb879ca3d65f74482
 }
 
 async function uploadFileToAkave(bucketName, filePath) {
