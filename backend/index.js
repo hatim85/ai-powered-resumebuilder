@@ -620,7 +620,7 @@ app.post("/generate-resume", async (req, res) => {
 
     // Generate PDF using PDFKit
     const timestamp = Date.now();
-    const filePath = `./Uploads/resume_${timestamp}.pdf`;
+    const filePath = `./uploads/resume_${timestamp}.pdf`;
     await generatePDF(resumeData, filePath);
 
     // Upload file to Akave
