@@ -21,6 +21,30 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
+app.get('/debug-chrome', async (req, res) => {
+  try {
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox']
+    });
+    const version = await browser.version();
+    await browser.close();
+    res.send(`Chrome version: ${version}`);
+  } catch (error) {
+    res.status(500).send(`Error: ${error.message}`);
+  }
+});
+
+app.get('/debug-puppeteer-cache', (req, res) => {
+  const path = '/opt/render/.cache/puppeteer/chrome';
+  try {
+    const dirs = fs.readdirSync(path);
+    res.send(`Chrome versions found: ${dirs}`);
+  } catch (error) {
+    res.status(500).send(`Error: ${error.message}`);
+  }
+});
+
 app.post("/generate-resume", async (req, res) => {
   try {
     const {
@@ -345,9 +369,8 @@ function generateResumeHTML(resumeData) {
 async function generatePDF(htmlContent, filePath) {
   const browser = await puppeteer.launch({
     headless: true,
-    executablePath: process.env.CHROME_EXECUTABLE_PATH || undefined,
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
-    userDataDir: process.env.PUPPETEER_CACHE_DIR || undefined
+    userDataDir: process.env.PUPPETEER_CACHE_DIR || '/opt/render/.cache/puppeteer'
   });
   const page = await browser.newPage();
   await page.setContent(htmlContent);
