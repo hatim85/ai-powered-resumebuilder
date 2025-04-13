@@ -25,7 +25,8 @@ app.get('/debug-chrome', async (req, res) => {
   try {
     const browser = await puppeteer.launch({
       headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox']
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      userDataDir: process.env.PUPPETEER_CACHE_DIR || '/opt/render/.cache/puppeteer'
     });
     const version = await browser.version();
     await browser.close();
@@ -36,10 +37,18 @@ app.get('/debug-chrome', async (req, res) => {
 });
 
 app.get('/debug-puppeteer-cache', (req, res) => {
-  const path = '/opt/render/.cache/puppeteer/chrome';
+  const fs = require('fs');
+  const chromePath = '/opt/render/.cache/puppeteer/chrome';
+  const cachePath = '/opt/render/.cache/puppeteer';
   try {
-    const dirs = fs.readdirSync(path);
-    res.send(`Chrome versions found: ${dirs}`);
+    const chromeDirs = fs.existsSync(chromePath) ? fs.readdirSync(chromePath) : [];
+    const cacheDirs = fs.existsSync(cachePath) ? fs.readdirSync(cachePath) : [];
+    res.send({
+      chromePathExists: fs.existsSync(chromePath),
+      chromeVersions: chromeDirs,
+      cachePathExists: fs.existsSync(cachePath),
+      cacheContents: cacheDirs
+    });
   } catch (error) {
     res.status(500).send(`Error: ${error.message}`);
   }
