@@ -85,12 +85,12 @@ const Navbar = ({
             </svg>
             Create CV
           </Link>
-          <Link
+          {/* <Link
             to="/find-by-address"
             className="text-sm font-semibold text-indigo-600 hover:text-indigo-800 transition-colors duration-300 px-4 py-2 rounded-md hover:bg-indigo-100"
           >
             Find Resume
-          </Link>
+          </Link> */}
           <WalletConnect
             setWalletAddress={setWalletAddress}
             setProvider={setProvider}
@@ -127,13 +127,13 @@ const Navbar = ({
             >
               Create CV
             </Link>
-            <Link
+            {/* <Link
               to="/find-by-address"
               className="block px-6 py-2 text-indigo-600 hover:bg-indigo-100"
               onClick={() => setIsOpen(false)}
             >
               Find Resume
-            </Link>
+            </Link> */}
           </div>
         )}
       </div>

@@ -331,9 +331,26 @@ function generateResumeHTML(resumeData) {
   `;
 }
 
-// Helper function to generate PDF using Puppeteer
+// // Helper function to generate PDF using Puppeteer
+// async function generatePDF(htmlContent, filePath) {
+//   const browser = await puppeteer.launch({ headless: true });
+//   const page = await browser.newPage();
+//   await page.setContent(htmlContent);
+//   await page.pdf({
+//     path: filePath,
+//     format: "A4",
+//     margin: { top: "20mm", right: "20mm", bottom: "20mm", left: "20mm" },
+//   });
+//   await browser.close();
+// }
+
 async function generatePDF(htmlContent, filePath) {
-  const browser = await puppeteer.launch({ headless: true });
+  const browser = await puppeteer.launch({
+    headless: true,
+    executablePath: process.env.CHROME_EXECUTABLE_PATH || undefined,
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    userDataDir: process.env.PUPPETEER_CACHE_DIR || undefined
+  });
   const page = await browser.newPage();
   await page.setContent(htmlContent);
   await page.pdf({

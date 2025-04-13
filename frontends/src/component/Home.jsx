@@ -120,7 +120,7 @@ const Home = () => {
       </div>
       
     </motion.div>
-        <CVBuilder />
+        {/* <CVBuilder /> */}
         <About />
     </>
   );

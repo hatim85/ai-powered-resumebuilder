@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./component/Navbar";
 import ResumeForm from "./component/ResumeForm";
 import ResumePreview from "./component/ResumePreview";
-import FindResumeByAddress from "./component/FindResumeByAddress"; // Import the new component
+// import FindResumeByAddress from "./component/FindResumeByAddress"; // Import the new component
 import Footer from "./component/Footer";
 import Home from "./component/Home";
 // import CVBuilder from "./component/CVBuilder";
@@ -51,7 +51,7 @@ function App() {
                 />
               }
             />
-            <Route
+            {/* <Route
               path="/find-by-address"
               element={
                 <FindResumeByAddress
@@ -59,7 +59,7 @@ function App() {
                   contract={contract}
                 />
               }
-            />
+            /> */}
             
           </Routes>
         </main>
