@@ -7,6 +7,7 @@ import dotenv from "dotenv";
 import fs from "fs";
 import axios from "axios";
 import FormData from "form-data";
+import path from "path";
 import puppeteer from "puppeteer";
 
 dotenv.config();
@@ -23,16 +24,26 @@ const openai = new OpenAI({
 
 app.get('/debug-chrome', async (req, res) => {
   try {
+    let executablePath;
+    if (process.env.NODE_ENV === 'production') {
+      const basePath = '/opt/render/.cache/puppeteer/chrome/linux-135.0.7049.84';
+      const possiblePaths = [
+        path.join(basePath, 'chrome-linux64', 'chrome'),
+        path.join(basePath, 'chrome-linux', 'chrome')
+      ];
+      executablePath = possiblePaths.find(p => fs.existsSync(p)) || possiblePaths[0];
+    }
+
     const browser = await puppeteer.launch({
       headless: true,
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
-      userDataDir: process.env.PUPPETEER_CACHE_DIR || '/opt/render/.cache/puppeteer'
+      executablePath
     });
     const version = await browser.version();
     await browser.close();
-    res.send(`Chrome version: ${version}`);
+    res.send(`Chrome version: ${version}, executablePath: ${executablePath}`);
   } catch (error) {
-    res.status(500).send(`Error: ${error.message}`);
+    res.status(500).send(`Error: ${error.message}, attempted path: ${executablePath}`);
   }
 });
 
@@ -375,11 +386,39 @@ function generateResumeHTML(resumeData) {
 //   await browser.close();
 // }
 
+// async function generatePDF(htmlContent, filePath) {
+//   const browser = await puppeteer.launch({
+//     headless: true,
+//     args: ['--no-sandbox', '--disable-setuid-sandbox'],
+//     executablePath: '/opt/render/.cache/puppeteer/chrome/linux-135.0.7049.84/chrome-linux64/chrome',
+//     userDataDir: process.env.PUPPETEER_CACHE_DIR || '/opt/render/.cache/puppeteer'
+//   });
+//   const page = await browser.newPage();
+//   await page.setContent(htmlContent);
+//   await page.pdf({
+//     path: filePath,
+//     format: "A4",
+//     margin: { top: "20mm", right: "20mm", bottom: "20mm", left: "20mm" },
+//   });
+//   await browser.close();
+// }
+
+
 async function generatePDF(htmlContent, filePath) {
+  let executablePath;
+  if (process.env.NODE_ENV === 'production') {
+    const basePath = '/opt/render/.cache/puppeteer/chrome/linux-135.0.7049.84';
+    const possiblePaths = [
+      path.join(basePath, 'chrome-linux64', 'chrome'),
+      path.join(basePath, 'chrome-linux', 'chrome')
+    ];
+    executablePath = possiblePaths.find(p => fs.existsSync(p)) || possiblePaths[0];
+  }
+
   const browser = await puppeteer.launch({
     headless: true,
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
-    executablePath: '/opt/render/.cache/puppeteer/chrome/linux-135.0.7049.84/chrome-linux64/chrome',
+    executablePath,
     userDataDir: process.env.PUPPETEER_CACHE_DIR || '/opt/render/.cache/puppeteer'
   });
   const page = await browser.newPage();
