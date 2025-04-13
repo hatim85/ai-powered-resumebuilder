@@ -67,8 +67,9 @@ const ResumeForm = ({ walletAddress, provider, contract, setResume, setFileName 
       alert('Please connect your wallet first!');
       return;
     }
+    // https://aipowered-resumebuilder.onrender.com
     try {
-      const response = await axios.post('https://aipowered-resumebuilder.onrender.com/generate-resume', formData);
+      const response = await axios.post('http://localhost:3000/generate-resume', formData);
       const cid = response.data.fileUrl.data.Name;
       setFileName(cid);
       setResume(response.data.resume);
